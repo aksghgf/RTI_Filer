@@ -1,0 +1,118 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05",
+  "mappings": [
+    {
+      "ministry": "Ministry of Agriculture and Farmers Welfare",
+      "dept_type": "central",
+      "keywords": ["pm kisan", "kisan nidhi", "fasal bima", "kisan", "agriculture", "fertilizer", "crop insurance", "mandis", "msp"],
+      "portal_url": "https://pgportal.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Agriculture, Krishi Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Consumer Affairs, Food and Public Distribution",
+      "dept_type": "central",
+      "keywords": ["ration card", "ration", "pds", "fair price shop", "anaj", "rashan", "fps", "godown", "food grains", "consumer court"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Dept of Food and Public Distribution, Krishi Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of External Affairs",
+      "dept_type": "central",
+      "keywords": ["passport", "visa", "emigration", "overseas", "nri", "haj", "embassy", "consulate", "mea"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of External Affairs, Patiala House Annexe, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Finance — CBDT",
+      "dept_type": "central",
+      "keywords": ["income tax", "pan card", "tds", "itr", "tax refund", "tax evasion", "form 16", "assessment officer"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Income Tax Department, Central Revenue Building, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Railways",
+      "dept_type": "central",
+      "keywords": ["railway ticket", "irctc", "train delay", "railway platform", "pnr", "refund tracking", "railway recruitment", "tc corruption"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Railway Board, Rail Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Road Transport and Highways",
+      "dept_type": "central",
+      "keywords": ["national highway", "nhai", "toll plaza", "toll tax", "expressway", "highway maintenance", "fastag"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, NHAI HQ, G-5 & 6, Sector-10, Dwarka, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Communications — Department of Telecommunications",
+      "dept_type": "central",
+      "keywords": ["bsnl", "broadband", "telecom towers", "spectrum", "cyber fraud call", "sim card fraud", "sanchar saathi"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Dept of Telecommunications, Sanchar Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Education",
+      "dept_type": "central",
+      "keywords": ["cbse", "ugc", "neet", "jee", "aicte", "scholarship", "iit", "nit", "central university", "kv admission"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Dept of Higher Education, Shastri Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Health and Family Welfare",
+      "dept_type": "central",
+      "keywords": ["ayushman bharat", "pmjay", "cghs", "aiims", "vaccination", "medical college quota", "fssai", "drug license"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Health, Nirman Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Labour and Employment",
+      "dept_type": "central",
+      "keywords": ["epfo", "provident fund", "pf withdrawal", "pf transfer", "esic", "e-shram", "labor laws", "minimum wage dispute"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, EPFO Head Office, Bhikaiji Cama Place, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Petroleum and Natural Gas",
+      "dept_type": "central",
+      "keywords": ["lpg cylinder", "ujjwala yojana", "petrol pump", "gas agency", "cng station", "iocl", "hpcl", "bpcl"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Petroleum, Shastri Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Housing and Urban Affairs",
+      "dept_type": "central",
+      "keywords": ["pm awas yojana", "pmay", "amrut", "smart city project", "metro rail construction", "urban planning grants"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Housing, Nirman Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Electronics and Information Technology (MeitY)",
+      "dept_type": "central",
+      "keywords": ["aadhaar card", "uidai", "csc", "digital india", "cyber security cell", "digilocker", "data breach"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, MeitY, Electronics Niketan, Lodhi Road, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Corporate Affairs",
+      "dept_type": "central",
+      "keywords": ["company registration", "mca21", "roc", "director din", "llp incorporation", "corporate fraud", "sebi"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Corporate Affairs, Shastri Bhawan, New Delhi"
+    },
+    {
+      "ministry": "Ministry of Home Affairs",
+      "dept_type": "central",
+      "keywords": ["crpf", "bsf", "cisf", "ib", "visa extension", "fcra license", "census", "delhi police dispute"],
+      "portal_url": "https://rtionline.gov.in",
+      "pio_address": "Public Information Officer, Ministry of Home Affairs, North Block, New Delhi"
+    },
+    {
+      "ministry": "STATE_LEVEL / LOCAL BODY",
+      "dept_type": "state",
+      "keywords": ["road", "bijli", "paani", "naali", "property tax", "nagar palika", "potholes", "sewer line", "street light", "water logging", "land revenue", "tehsildar", "ration distribution local", "state police", "fir action", "electricity meter", "municipal", "gram panchayat", "bdo office", "pradhan funds", "churan", "sadak", "gali"],
+      "portal_url": "state-specific",
+      "pio_address": "state-specific"
+    }
+  ]
+}
