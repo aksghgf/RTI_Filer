@@ -69,29 +69,19 @@ def call_static_template(prompt: str, user_name: str, user_location: str) -> str
         f"Location: {user_location}"
     )
 async def draft_with_retry_loop(prompt: str, user_name: str, user_location: str, provider_func) -> str:
-    """
-    The Agentic Loop: Draft -> Critic -> Rewrite
-    Maximum 3 attempts to pass the quality check.
-    """
-    current_prompt = prompt
-    
-    for attempt in range(3):
-        # 1. Draft
-        draft = await provider_func(current_prompt, user_name, user_location)
-        
-        # 2. Critic Node Evaluation
-        validation_result = validate_rti_output(draft)
-        
-        # 3. Decision
-        if validation_result.passed:
-            return draft # Perfect draft, exit the loop
-            
-        # If failed, create a feedback loop for the LLM
-        issues_text = ", ".join(validation_result.issues)
-        current_prompt = f"Your previous draft was rejected for these reasons: {issues_text}. Rewrite it to fix these errors. Original problem: {prompt}"
-        
-    # If it fails 3 times, return the best effort rather than crashing
-    return draft
+    """Single-pass draft with one optional rewrite if validation fails."""
+    draft = await provider_func(prompt, user_name, user_location)
+    validation_result = validate_rti_output(draft)
+
+    if validation_result.passed:
+        return draft
+
+    issues_text = ", ".join(validation_result.issues)
+    retry_prompt = (
+        f"Your previous draft was rejected for these reasons: {issues_text}. "
+        f"Rewrite it to fix these errors. Original problem: {prompt}"
+    )
+    return await provider_func(retry_prompt, user_name, user_location)
 
 async def generate_rti_pipeline(user_query: str, user_name: str, user_location: str):
     """The Orchestrator: Routes traffic and handles complete failures."""

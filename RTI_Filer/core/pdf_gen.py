@@ -3,6 +3,9 @@
 # ==========================================
 import os
 import re
+import time
+from datetime import datetime
+from typing import Optional
 from fpdf import FPDF
 
 def clean_llm_text(text: str) -> str:
@@ -30,8 +33,12 @@ def clean_llm_text(text: str) -> str:
         return text
     return "\n\n".join(cleaned_lines)
 
-def create_rti_pdf(rti_text: str, ministry_name: str, user_name: str, user_location: str, file_name: str = "RTI_Application.pdf") -> str:
+def create_rti_pdf(rti_text: str, ministry_name: str, user_name: str, user_location: str, file_name: Optional[str] = None) -> str:
     """Generates a legally formatted PDF with bulletproof structural alignment."""
+
+    if not file_name:
+        safe_name = re.sub(r"[^A-Za-z0-9_]+", "_", user_name.strip()) or "Applicant"
+        file_name = f"RTI_{safe_name}_{int(time.time())}.pdf"
     
     final_queries_text = clean_llm_text(rti_text)
     
@@ -146,7 +153,7 @@ def create_rti_pdf(rti_text: str, ministry_name: str, user_name: str, user_locat
     pdf.cell(w=content_width, h=6, txt=f"Address: {user_location}", ln=1)
     
     pdf.set_x(20)
-    pdf.cell(w=content_width, h=6, txt="Date: May 21, 2026", ln=1)
+    pdf.cell(w=content_width, h=6, txt=f"Date: {datetime.now().strftime('%B %d, %Y')}", ln=1)
     
     # 7. Output Management
     if not os.path.exists("outputs"):

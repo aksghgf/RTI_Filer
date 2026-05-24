@@ -44,34 +44,47 @@
       <small>Minimum 20 characters. Hindi, English, or Hinglish is fine.</small>
     </label>
 
-    <button type="submit" class="submit-btn" [disabled]="loading || rtiForm.invalid">
-      {{ loading ? 'Generating RTI...' : 'Generate RTI PDF' }}
+    <button type="submit" class="submit-btn" [disabled]="loading() || rtiForm.invalid">
+      {{ loading() ? loadingMessage() : 'Generate RTI PDF' }}
     </button>
   </form>
 
-  <p *ngIf="errorMessage" class="alert error">{{ errorMessage }}</p>
+  @if (loading()) {
+    <p class="alert info">This usually takes 5–15 seconds while the AI drafts your application.</p>
+  }
 
-  <section *ngIf="result" class="result-panel">
-    <p class="alert success">RTI draft generated successfully.</p>
+  @if (errorMessage()) {
+    <p class="alert error">{{ errorMessage() }}</p>
+  }
 
-    <div class="meta-grid">
-      <div>
-        <span class="label">Routed ministry</span>
-        <strong>{{ result.detected_ministry }}</strong>
+  @if (result(); as response) {
+    <section #resultPanel class="result-panel">
+      <p class="alert success">RTI draft generated successfully.</p>
+
+      <div class="meta-grid">
+        <div>
+          <span class="label">Routed ministry</span>
+          <strong>{{ response.detected_ministry }}</strong>
+        </div>
+        <div>
+          <span class="label">Status</span>
+          <strong>{{ response.status }}</strong>
+        </div>
       </div>
-      <div>
-        <span class="label">Status</span>
-        <strong>{{ result.status }}</strong>
+
+      <label class="field">
+        <span>Draft preview</span>
+        <textarea readonly rows="12">{{ response.draft_preview }}</textarea>
+      </label>
+
+      <div class="action-row">
+        <button type="button" class="download-btn" (click)="downloadPdf()" [disabled]="pdfDownloading()">
+          {{ pdfDownloading() ? 'Downloading PDF...' : 'Download RTI PDF' }}
+        </button>
+        @if (pdfUrl()) {
+          <a class="link-btn" [href]="pdfUrl()" target="_blank" rel="noopener">Open PDF in new tab</a>
+        }
       </div>
-    </div>
-
-    <label class="field">
-      <span>Draft preview</span>
-      <textarea readonly rows="12">{{ result.draft_preview }}</textarea>
-    </label>
-
-    <a *ngIf="pdfUrl" class="download-btn" [href]="pdfUrl" target="_blank" rel="noopener">
-      Download RTI PDF
-    </a>
-  </section>
+    </section>
+  }
 </section>
