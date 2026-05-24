@@ -64,7 +64,59 @@ Replace with the exact URL shown for **rti-frontend**.
 
 ---
 
-## Environment variables
+## Option C — Vercel (frontend only)
+
+Use this with your **Render backend** (or any hosted API).
+
+### 1. Push latest code to GitHub
+
+Include `rti-frontend/vercel.json` and the backend CORS update.
+
+### 2. Import on Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import `aksghgf/RTI_Filer` (or your repo)
+3. Configure:
+
+| Setting | Value |
+|---|---|
+| **Root Directory** | `rti-frontend` |
+| **Framework Preset** | Other |
+| **Build Command** | `npm run build:prod` |
+| **Output Directory** | `dist/rti-frontend/browser` |
+
+(Vercel reads these from `vercel.json` when root is `rti-frontend`.)
+
+### 3. Environment variable (required)
+
+In Vercel → **Project → Settings → Environment Variables**:
+
+| Key | Value | Environments |
+|---|---|---|
+| `API_URL` | `https://YOUR-BACKEND.onrender.com` | Production, Preview, Development |
+
+Replace with your live Render backend URL (no trailing slash).
+
+Redeploy after adding the variable.
+
+### 4. Backend CORS
+
+The backend already allows `https://*.vercel.app` by default.
+
+Optionally add your exact Vercel URL on Render:
+
+```
+CORS_ORIGINS=https://your-app.vercel.app
+```
+
+### 5. Verify
+
+1. Open your Vercel URL (e.g. `https://rti-filer.vercel.app`)
+2. Submit a test RTI form
+3. Confirm draft + PDF download work
+
+---
+
 
 | Variable | Service | Description |
 |---|---|---|

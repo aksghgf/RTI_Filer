@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 
-const rawUrl = process.env.API_URL || 'http://127.0.0.1:8000';
+const rawUrl =
+  process.env.API_URL ||
+  process.env.VITE_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://127.0.0.1:8000';
 const apiUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
 
 const content = `export const environment = {

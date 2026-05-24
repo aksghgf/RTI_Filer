@@ -24,6 +24,7 @@ CORS_ORIGINS = [
     for origin in os.getenv("CORS_ORIGINS", DEFAULT_CORS).split(",")
     if origin.strip()
 ]
+CORS_ORIGIN_REGEX = os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app")
 
 
 @asynccontextmanager
@@ -41,6 +42,7 @@ app.mount("/outputs", StaticFiles(directory=OUTPUTS_DIR), name="outputs")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
+    allow_origin_regex=CORS_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
