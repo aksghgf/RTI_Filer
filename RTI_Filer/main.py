@@ -1,27 +1,44 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import asyncio
 import os
 from dotenv import load_dotenv
 
-# Base path clear karke explicit encoding do
 load_dotenv(encoding="utf-8-sig")
 
-# Core agents and utility logic imports
 from core.validator import validate_rti_input
-from core.classifier import classify_issue  # Base JSON model function
+from core.classifier import classify_issue
 from core.fallback import generate_rti_pipeline
 from core.pdf_gen import create_rti_pdf
-from core.db import get_db_connection
-# 1. Initialize FastAPI App
-app = FastAPI(title="RTI Auto-Filer API", version="2.0")
-app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
-# 2. CORS Middleware Configuration (Mandatory for Angular Frontend Integration)
+from core.db import get_db_connection, init_db_schema
+
+OUTPUTS_DIR = os.getenv("OUTPUTS_DIR", "outputs")
+DEFAULT_CORS = "http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080"
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", DEFAULT_CORS).split(",")
+    if origin.strip()
+]
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    os.makedirs(OUTPUTS_DIR, exist_ok=True)
+    try:
+        init_db_schema()
+    except Exception as db_error:
+        print(f"Database schema init skipped: {db_error}")
+    yield
+
+
+app = FastAPI(title="RTI Auto-Filer API", version="2.0", lifespan=lifespan)
+app.mount("/outputs", StaticFiles(directory=OUTPUTS_DIR), name="outputs")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Angular Local Dev Port [cite: 381]
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,29 +88,34 @@ async def generate_rti_endpoint(request: RTIRequest):
             user_location=request.user_location
         )
         
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        insert_query = """
-        INSERT INTO rti_applications (user_name, user_location, problem_text, detected_ministry, rti_draft, pdf_path, language)
-        VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id;
-        """
-        
-        cursor.execute(insert_query, (
-            request.user_name,
-            request.user_location,
-            input_check.sanitized_text,
-            current_ministry,
-            final_draft,
-            pdf_path,
-            input_check.language  # ➕ Storing detected language inside database
-        ))
-        
-        db_record_id = cursor.fetchone()[0]
-        
-        conn.commit()  
-        cursor.close()
-        conn.close()
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            insert_query = """
+            INSERT INTO rti_applications (
+                user_name, user_location, problem_text, detected_ministry,
+                rti_draft, pdf_path, language
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id;
+            """
+            cursor.execute(
+                insert_query,
+                (
+                    request.user_name,
+                    request.user_location,
+                    input_check.sanitized_text,
+                    current_ministry,
+                    final_draft,
+                    pdf_path,
+                    input_check.language,
+                ),
+            )
+            cursor.fetchone()
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except Exception as db_error:
+            print(f"Database persist skipped: {db_error}")
 
 
 

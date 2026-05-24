@@ -1,0 +1,50 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Deploy: connect this repo on Render and use "New Blueprint"
+
+databases:
+  - name: rti-db
+    plan: free
+    databaseName: rti_db
+    user: rti_user
+
+services:
+  - type: web
+    name: rti-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./RTI_Filer/Dockerfile
+    dockerContext: ./RTI_Filer
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rti-db
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PYTHONUTF8
+        value: "1"
+      - key: OUTPUTS_DIR
+        value: /app/outputs
+
+  - type: web
+    name: rti-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm install && npm run build:prod
+    staticPublishPath: ./dist/rti-frontend/browser
+    rootDir: rti-frontend
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: rti-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
