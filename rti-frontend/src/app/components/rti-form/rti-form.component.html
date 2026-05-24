@@ -1,0 +1,77 @@
+<section class="form-card">
+  <header class="form-header">
+    <h2>File your RTI application</h2>
+    <p>
+      Describe your civic issue in plain language. The system will route it to the correct
+      ministry, draft the legal text, and generate a compliance-ready PDF.
+    </p>
+  </header>
+
+  <form (ngSubmit)="onSubmit()" #rtiForm="ngForm" class="rti-form">
+    <div class="field-row">
+      <label class="field">
+        <span>Full name</span>
+        <input
+          type="text"
+          name="userName"
+          [(ngModel)]="userName"
+          placeholder="e.g. Aman Kumar"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span>District &amp; state</span>
+        <input
+          type="text"
+          name="userLocation"
+          [(ngModel)]="userLocation"
+          placeholder="e.g. Noida, Uttar Pradesh"
+          required
+        />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Describe your problem</span>
+      <textarea
+        name="problemText"
+        rows="6"
+        [(ngModel)]="problemText"
+        placeholder="Example: Mere area me pichle 3 mahine se broadband cables baar-baar cut ho rhi hain..."
+        required
+      ></textarea>
+      <small>Minimum 20 characters. Hindi, English, or Hinglish is fine.</small>
+    </label>
+
+    <button type="submit" class="submit-btn" [disabled]="loading || rtiForm.invalid">
+      {{ loading ? 'Generating RTI...' : 'Generate RTI PDF' }}
+    </button>
+  </form>
+
+  <p *ngIf="errorMessage" class="alert error">{{ errorMessage }}</p>
+
+  <section *ngIf="result" class="result-panel">
+    <p class="alert success">RTI draft generated successfully.</p>
+
+    <div class="meta-grid">
+      <div>
+        <span class="label">Routed ministry</span>
+        <strong>{{ result.detected_ministry }}</strong>
+      </div>
+      <div>
+        <span class="label">Status</span>
+        <strong>{{ result.status }}</strong>
+      </div>
+    </div>
+
+    <label class="field">
+      <span>Draft preview</span>
+      <textarea readonly rows="12">{{ result.draft_preview }}</textarea>
+    </label>
+
+    <a *ngIf="pdfUrl" class="download-btn" [href]="pdfUrl" target="_blank" rel="noopener">
+      Download RTI PDF
+    </a>
+  </section>
+</section>

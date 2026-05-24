@@ -1,0 +1,20 @@
+/* Global styles for RTI Auto-Filer */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
