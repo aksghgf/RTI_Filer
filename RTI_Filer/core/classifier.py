@@ -3,43 +3,45 @@ import os
 import re
 
 def load_ministries_data():
-    """Loads the 80+ Central Ministries database with dynamic path resolution."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    path_option_1 = os.path.join(current_dir, "data", "ministries.json")
-    path_option_2 = os.path.join(current_dir, "..", "data", "ministries.json")
-    path_option_3 = os.path.join(current_dir, "ministries.json")
+    """Loads the Central Ministries database from data/ministries.json.
     
-    json_path = None
-    if os.path.exists(path_option_1):
-        json_path = path_option_1
-    elif os.path.exists(path_option_2):
-        json_path = path_option_2
-    elif os.path.exists(path_option_3):
-        json_path = path_option_3
+    The JSON schema uses 'mappings' as root key and 'ministry' as name field.
+    Falls back to a hardcoded list if the file is missing or unreadable.
+    """
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # Search: core/../data/, core/data/, and cwd/data/
+    path_options = [
+        os.path.join(current_dir, "..", "data", "ministries.json"),  # RTI_Filer/data/
+        os.path.join(current_dir, "data", "ministries.json"),
+        os.path.join(os.getcwd(), "data", "ministries.json"),
+    ]
 
-    # 1. Agar koi path valid mila, toh use load karne ki koshish karo
-    if json_path:
-        try:
-            with open(json_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"⚠️ Warning: Failed to read JSON file ({str(e)}). Using fallback.")
+    for path in path_options:
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    # ministries.json uses 'mappings' key — normalise it
+                    if "mappings" in data and "ministries" not in data:
+                        data["ministries"] = data["mappings"]
+                    print(f"[OK] Loaded ministries from: {path}")
+                    return data
+            except Exception as e:
+                print(f"[WARN] Failed to read JSON file ({str(e)}). Trying next path.")
 
-    # 2. 👑 FIXED INDENTATION: Agar json_path nahi mila YA file read fail ho gayi,
-    # toh yeh default database safe side return hoga (Function ke main block mein hai ye)
-    print("⚠️ Notice: Deploying fallback ministry keywords database.")
+    print("[WARN] Deploying fallback ministry keywords database.")
     return {
         "ministries": [
             {
-                "name": "Ministry of Road Transport and Highways",
+                "ministry": "Ministry of Road Transport and Highways",
                 "keywords": ["road", "highway", "sarak", "contractor", "pothole", "construction", "toll", "bypass"]
             },
             {
-                "name": "Ministry of Consumer Affairs, Food and Public Distribution",
+                "ministry": "Ministry of Consumer Affairs, Food and Public Distribution",
                 "keywords": ["ration", "pds", "food grain", "consumer", "dealer", "chawal", "gehu"]
             },
             {
-                "name": "Ministry of Railways",
+                "ministry": "Ministry of Railways",
                 "keywords": ["railway", "station", "train", "platform", "irctc", "berth", "ticket"]
             }
         ]
@@ -63,10 +65,11 @@ def classify_issue(problem_text: str) -> dict:
             # Regex boundary (\b) use kiya hai taaki partial match na ho
             if re.search(r'\b' + re.escape(keyword.lower()) + r'\b', cleaned_input):
                 match_count += 1
-                
+
         if match_count > max_matches:
             max_matches = match_count
-            best_match = ministry["name"]
+            # ministries.json uses 'ministry' key; fallback uses same key now
+            best_match = ministry.get("ministry") or ministry.get("name")
             
     # Agar koi bhi keyword match na ho, toh general portal par bhej do
     if not best_match or max_matches == 0:
