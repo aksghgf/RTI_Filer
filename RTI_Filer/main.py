@@ -16,6 +16,8 @@ from core.pdf_gen import create_rti_pdf
 from core.db import get_db_connection, init_db_schema
 
 OUTPUTS_DIR = os.getenv("OUTPUTS_DIR", "outputs")
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+
 DEFAULT_CORS = "http://localhost:4200,http://127.0.0.1:4200,http://localhost:8080"
 CORS_ORIGINS = [
     origin.strip()
